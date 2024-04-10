@@ -1,0 +1,29 @@
+{% load django_bootstrap5 %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>
+            {% block title %}
+
+            {% endblock title %}
+        </title>
+        <link rel="shortcut icon" href="{% static 'home/img/favicon.ico' %}" type="image/x-icon">
+        <!-- Bootstrap CSS -->
+        {% bootstrap_css %}
+    </head>
+    <body>
+        <!-- Navbar -->
+        {% include "includes/navbar.html" %}
+
+        <!-- Content -->
+        {% block content %}
+            <h1>This is Master Template</h1>
+        {% endblock content %}
+        
+        <!-- Bootstrap JS -->
+        {% bootstrap_javascript %}
+    </body>
+</html>
