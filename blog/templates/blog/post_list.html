@@ -1,0 +1,53 @@
+{% extends "base_master.html" %}
+{% load static %}
+{% load humanize %}
+{% block title %}
+    Post List
+{% endblock title %}
+{% block content %}
+    <div class="container mt-3 mb-5">
+        <div class="row justify-content-between">
+            <div class="col-6">
+                <h1>Feed</h1>
+            </div>
+            <div class="col-6">
+                <button type="button" class="btn btn-primary float-end btn-lg"><i class="bi bi-plus-square"></i> Create Post</button>
+            </div>
+        </div>
+        <hr>
+        {% if post_list %}
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for post in post_list %}
+               <div class="col">
+                    <div class="card h-100">
+                    <img src="{% static 'blog/img/no-img.png' %}" class="card-img-top" >
+                    <div class="card-body">
+                        <h5 class="card-title">{{post.title}}</h5>
+                        <p class="card-text">{{post.content|truncatechars:100}}</p>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <a href="#" class="btn btn-outline-success btn-sm"><i class="bi bi-view-list"></i> View Post</a>
+                            <a href="#" class="btn btn-outline-warning btn-sm"><i class="bi bi-pencil-square"></i> Edit Post</a>
+                            <a href="#" class="btn btn-outline-danger btn-sm"><i class="bi bi-trash3"></i> Delete Post</a>
+                        </li>
+                        <li class="list-group-item">
+                            <span class="fw-bold">Post Date : </span>{{post.created_at|date}}
+                        </li>
+                        <li class="list-group-item">
+                            <span class="fw-bold">Author : </span> &lt; Author Name &gt;
+                        </li>
+                    </ul>
+                    <div class="card-footer">
+                        <small class="text-body-secondary">Last updated {{post.updated_at|naturaltime}}</small>
+                    </div>
+                    </div>
+                </div>
+            {% endfor %}
+            </div>
+        {% else %}
+            <div class="bg bg-info text-white">
+                There are no posts
+            </div>
+        {% endif %}
+{% endblock content %}
