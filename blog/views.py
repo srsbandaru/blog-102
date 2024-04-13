@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from blog.models import Post
 
@@ -60,3 +60,16 @@ class PostUpdate(UpdateView):
         # Add your context data
         context["form_type"] = "Update"
         return context
+
+# Post Delete
+class PostDelete(DeleteView):
+    template_name = 'blog/post_confirm_delete.html'
+    model = Post 
+    context_object_name = "post"
+    pk_url_kwarg = 'pk'
+    success_url = reverse_lazy("blog:post_list")
+    http_method_names = ['get', 'post']
+
+    def get_queryset(self):
+        queryset = self.model.objects.filter(id = self.kwargs["pk"])
+        return queryset
