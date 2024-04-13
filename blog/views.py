@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.urls import reverse_lazy
 from blog.models import Post
 
@@ -33,3 +33,30 @@ class PostCreate(CreateView):
     context_object_name = "form"
     http_method_names = ["get", "post"]
     fields = ["title", "content"]
+
+# Post Update
+class PostUpdate(UpdateView):
+    template_name = "blog/post_form.html"
+    # success_url = reverse_lazy('blog:post_list')
+    model = Post
+    pk_url_kwarg = 'pk'
+    context_object_name = "form"
+    http_method_names = ['get', 'post',]
+    fields = ["title", "content"]
+
+    # Customise the queryset
+    def get_queryset(self):
+        queryset = self.model.objects.filter(id = self.kwargs["pk"])
+        return queryset
+    
+    # Customise the success_url
+    def get_success_url(self):
+        return reverse_lazy("blog:post_detail", kwargs = {"pk":self.kwargs["pk"]})
+    
+    # Add your context data
+    def get_context_data(self, **kwargs):
+        # Get context data
+        context = super(PostUpdate, self).get_context_data(**kwargs)
+        # Add your context data
+        context["form_type"] = "Update"
+        return context
