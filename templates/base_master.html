@@ -20,6 +20,11 @@
         <!-- Navbar -->
         {% include "includes/navbar.html" %}
 
+        <!-- Messages -->
+        <div class="container mt-3">
+            {% bootstrap_messages %}
+        </div>
+        
         <!-- Content -->
         {% block content %}
             <h1>This is Master Template</h1>

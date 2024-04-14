@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from blog.models import Post
+from django.contrib.messages.views import SuccessMessageMixin
 
 # Create your views here.
 
@@ -26,16 +27,17 @@ class PostDetail(DetailView):
         return queryset
     
 # Post Create
-class PostCreate(CreateView):
+class PostCreate(SuccessMessageMixin, CreateView):
     template_name = "blog/post_form.html"
     success_url = reverse_lazy('blog:post_list')
     model = Post
     context_object_name = "form"
     http_method_names = ["get", "post"]
     fields = ["title", "content"]
+    success_message = "Your post has been created successfully."
 
 # Post Update
-class PostUpdate(UpdateView):
+class PostUpdate(SuccessMessageMixin, UpdateView):
     template_name = "blog/post_form.html"
     # success_url = reverse_lazy('blog:post_list')
     model = Post
@@ -43,6 +45,7 @@ class PostUpdate(UpdateView):
     context_object_name = "form"
     http_method_names = ['get', 'post',]
     fields = ["title", "content"]
+    success_message = "Your post has been updated successfully."
 
     # Customise the queryset
     def get_queryset(self):
@@ -62,13 +65,14 @@ class PostUpdate(UpdateView):
         return context
 
 # Post Delete
-class PostDelete(DeleteView):
+class PostDelete(SuccessMessageMixin, DeleteView):
     template_name = 'blog/post_confirm_delete.html'
     model = Post 
     context_object_name = "post"
     pk_url_kwarg = 'pk'
     success_url = reverse_lazy("blog:post_list")
     http_method_names = ['get', 'post']
+    success_message = "Your post has been deleted succeesfully."
 
     def get_queryset(self):
         queryset = self.model.objects.filter(id = self.kwargs["pk"])
