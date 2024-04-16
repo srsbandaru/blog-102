@@ -72,7 +72,7 @@ class PostDelete(SuccessMessageMixin, DeleteView):
     pk_url_kwarg = 'pk'
     success_url = reverse_lazy("blog:post_list")
     http_method_names = ['get', 'post']
-    success_message = "Your post has been deleted succeesfully."
+    success_message = "Your post has been deleted successfully."
 
     def get_queryset(self):
         queryset = self.model.objects.filter(id = self.kwargs["pk"])

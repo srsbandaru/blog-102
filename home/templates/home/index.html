@@ -6,6 +6,10 @@
 {% block content %}
     <div class="container">
         <div class="px-4 py-5 my-5 text-center">
+          {% if request.user.is_authenticated %}
+            <h1>Hello {{request.user}}..!</h1>
+          {% endif %}
+            
             <img class="d-block mx-auto mb-4" src="{% static 'home/img/logo.svg' %}" alt="logo" width="200" height="200">
             <h1 class="display-5 fw-bold text-body-emphasis">Welcome to Tech Blog</h1>
             <div class="col-lg-6 mx-auto">
