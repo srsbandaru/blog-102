@@ -43,7 +43,7 @@ class PostUpdate(SuccessMessageMixin, UpdateView):
     model = Post
     pk_url_kwarg = 'pk'
     context_object_name = "form"
-    http_method_names = ['get', 'post',]
+    http_method_names = ['get', 'post']
     fields = ["title", "content"]
     success_message = "Your post has been updated successfully."
 

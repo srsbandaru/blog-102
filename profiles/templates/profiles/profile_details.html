@@ -1,0 +1,100 @@
+{% extends "base_master.html" %}
+{% load thumbnail %}
+{% block title %}
+    {{profile.user.username}}'s profile
+{% endblock title %}
+{% block content %}
+
+    {% comment %} <div class="container">
+        <h1>Profile Details</h1>
+        Username : {{profile.user.username}} <br>
+        First Name : {{profile.first_name}} <br>
+        Last Name : {{profile.last_name}} <br>
+        Mobile Number : {{profile.mobile}} <br>
+        Address : {{profile.address}} <br>
+        Profile Picture : {{profile.image}} <br>
+    </div> {% endcomment %}
+    <section>
+    <div class="container py-5">
+        <div class="row">
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    {% if profile.image %}
+                        {% thumbnail profile.image "210x210" crop="center" as im %}
+                            <img class="rounded-circle img-fluid" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{profile.user}}">
+                        {% endthumbnail %}
+                    {% else %}
+                        <img src="/media/profiles/no-profile-picture.webp" alt="{{profile.user}}"
+              class="rounded-circle img-fluid" style="width: 245px;">
+                    {% endif %}
+                    <h5 class="my-3">{{profile.first_name}} {{profile.last_name}}</h5>
+                    <div class="d-flex justify-content-center mb-2">
+                        <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary">Follow</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">First Name</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">{{profile.first_name}}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Last Name</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">{{profile.last_name}}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Username</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">{{profile.user.username}}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Email</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">{{profile.user.email}}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Mobile</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">{{profile.mobile}}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Address</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">{{profile.address}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+    </section>
+{% endblock content %}
