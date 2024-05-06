@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 
 # Create your views here.
 class UserProfile(DetailView):
-    template_name = "profiles/profile_details.html"
+    template_name = "profiles/profile_detail.html"
     model = Profile
     http_method_names = ["get"]
     context_object_name = "profile"
