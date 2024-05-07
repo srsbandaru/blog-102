@@ -24,7 +24,7 @@ urlpatterns = [
     path("", include("home.urls")),
     path("blog/", include("blog.urls")),
     path("accounts/", include("allauth.urls")),
-    path("profiles/", include("profiles.urls"))
+    path("profile/", include("profiles.urls"))
 ]
 
 if settings.DEBUG:

@@ -30,7 +30,21 @@
                     {% endif %}
                     <h5 class="my-3">{{profile.first_name}} {{profile.last_name}}</h5>
                     <div class="d-flex justify-content-center mb-2">
-                        <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary">Follow</button>
+                        <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary"
+                            onclick="window.location='{% url 'profiles:picture_update' profile.id %}'">
+                                {% if profile.image %}
+                                    Change Picture
+                                {% else %}
+                                    Upload Picture
+                                {% endif %}
+                        </button>
+                        {% if profile.image %}
+                            <button type="submit" data-mdb-button-init data-mdb-ripple-init 
+                                class="btn btn-outline-danger ms-1"
+                                onclick="window.location='{% url 'profiles:picture_delete' profile.id %}'">
+                                Remove Picture
+                            </button>
+                        {% endif %}
                     </div>
                 </div>
             </div>
