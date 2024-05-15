@@ -11,9 +11,15 @@
             <h1>Create a Post</h1>
         {% endif %}
         
-        <form action="" method="post">
+        <form action="" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {% bootstrap_form form %}
+            {% if form_type == 'Update' and form.image.value != "" %}
+                <div class="mb-3">
+                    <label class="form-label" for="current-image">Current Image</label><br/>
+                    <img class="img-fluid" src="/media/{{form.image.value}}" width="25%" alt="post-image">
+                </div>
+            {% endif %}
             
             <button type="submit" class="btn btn-primary">
                 {% if form_type == "Update" %}

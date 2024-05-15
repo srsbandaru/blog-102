@@ -1,8 +1,10 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from blog.models import Post
 from django.contrib.messages.views import SuccessMessageMixin
+from blog.forms import PostForm
+from django.contrib import messages
 
 # Create your views here.
 
@@ -33,7 +35,7 @@ class PostCreate(SuccessMessageMixin, CreateView):
     model = Post
     context_object_name = "form"
     http_method_names = ["get", "post"]
-    fields = ["title", "content"]
+    fields = ["title", "content", "image"]
     success_message = "Your post has been created successfully."
 
 # Post Update
@@ -44,8 +46,24 @@ class PostUpdate(SuccessMessageMixin, UpdateView):
     pk_url_kwarg = 'pk'
     context_object_name = "form"
     http_method_names = ['get', 'post']
-    fields = ["title", "content"]
-    success_message = "Your post has been updated successfully."
+    # fields = ["title", "content"]
+    form_class = PostForm
+    # success_message = "Your post has been updated successfully."
+
+    # Update Post with Image
+    def post(self, request, *args, **kwargs):
+        post = get_object_or_404(self.model, id=self.kwargs['pk'])
+        if request.FILES:
+            post.image.delete()
+        form = PostForm(request.POST, request.FILES, instance=post)
+        if not form.is_valid():
+            context = {
+                'form':form
+            }
+            return render(request, self.template_name, context)
+        form.save()
+        messages.success(request, "Your post has been updated successfully.")
+        return redirect(self.get_success_url())
 
     # Customise the queryset
     def get_queryset(self):

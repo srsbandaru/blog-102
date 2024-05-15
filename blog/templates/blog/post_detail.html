@@ -18,7 +18,12 @@
         </div>
         <hr>
         <div class="clearfix">
-            <img src="{% static 'blog/img/no-img.png' %}" class="col-md-6 float-md-end mb-3 ms-md-3 img-fluid" >
+            {% if post.image %}
+                <img src="{{post.image.url}}" class="col-md-6 float-md-end mb-3 ms-md-3 img-fluid" >
+            {% else %}
+                <img src="{% static 'blog/img/no-img.png' %}" class="col-md-6 float-md-end mb-3 ms-md-3 img-fluid" >
+            {% endif %}
+            
             <p>{{post.content}}</p>
             <hr>
             <p><span class="fw-bold">Author:</span> &lt;Author_Name&gt;</p>
