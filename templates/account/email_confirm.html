@@ -1,0 +1,30 @@
+{% extends "account/base_entrance.html" %}
+{% load account %}
+{% load allauth %}
+{% block title %}
+    Confirm Email Address
+{% endblock title %}
+{% block content %}
+    <div class="container">
+        <h1>Confirm Email Address</h1>
+        {% if confirmation %}
+            {% user_display confirmation.email_address.user as user_display %}
+            {% if can_confirm %}
+                <p>Please confirm that <a href="mailto:{{ email }}">{{ email }}</a> is an email address for user {{ user_display }}.</p>
+                {% url 'account_confirm_email' confirmation.key as action_url %}
+                {% element form method="post" action=action_url %}
+                    {% slot actions %}
+                        {% csrf_token %}
+                        {{ redirect_field }}
+                        <button type="submit">Confirm</button>
+                    {% endslot %}
+                {% endelement %}
+            {% else %}
+                <p>Unable to confirm {{ email }} because it is already confirmed by a different account.</p>
+            {% endif %}
+        {% else %}
+            {% url 'account_email' as email_url %}
+            <p>This email confirmation link expired or is invalid. Please <a href="{{ email_url }}">issue a new email confirmation request</a>.</p>
+        {% endif %}
+    </div> 
+{% endblock content %}

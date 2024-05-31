@@ -1,0 +1,62 @@
+{% extends "account/base_entrance.html" %}
+{% load allauth %}
+{% block title %}
+    Email Address
+{% endblock title %}
+{% block content %}
+    <div class="container">
+        <h1>Email Address</h1>
+        {% if not emailaddresses %}
+            {% include "account/snippets/warn_no_email.html" %}
+        {% endif %}
+        {% url 'account_email' as action_url %}
+        {% element form method="post" action=action_url %}
+            {% slot body %}
+                {% csrf_token %}
+                {% if current_emailaddress %}
+                    <div class="mb-3">
+                        <label for="current_email" class="form-label">Current email</label>
+                        <input type="email" class="form-control" id="current_email" disabled value="{{current_emailaddress.email}}">
+                    </div>
+                {% endif %}
+                {% if new_emailaddress %}
+                    <div class="mb-3">
+                        <label for="new_email" class="form-label">
+                            {% if not current_emailaddress %}
+                                Current email
+                            {% else %}
+                                Changing to
+                            {% endif %}
+                        </label>
+                        <input type="email" class="form-control" id="new_email" disabled value="{{new_emailaddress.email}}" aria-describedby="emailHelpBlock">
+                    </div>
+                    <div id="emailHelpBlock" class="form-text text-danger fs-4 mb-3">
+                        Your email address is still pending verification.
+                    </div>
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-warning" name="action_send" form="pending-email">Re-send Verification</button>
+                        {% if current_emailaddress %}
+                            <button type="submit" class="btn btn-danger" name="action_remove" form="pending-email">Cancel Change</button>
+                        {% endif %}
+                    </div>
+                {% endif %}
+                <div class="mb-3">
+                    <label for="{{form.email.auto_id}}" class="form-label">Change to</label>
+                    <input type="email" class="form-control" id="{{form.email.auto_id}}" name="email" required placeholder="name@example.com">
+                </div>
+            {% endslot %}
+            {% slot actions %}
+                <button type="submit" class="btn btn-primary" name="action_add">Change Email</button>
+            {% endslot %}
+        {% endelement %}
+        {% if new_emailaddress %}
+            <form style="display: none"
+                id="pending-email"
+                method="post"
+                action="{% url 'account_email' %}">
+                {% csrf_token %}
+                <input type="hidden" name="email" value="{{ new_emailaddress.email }}">
+            </form>
+        {% endif %}
+    </div>
+{% endblock content %}
