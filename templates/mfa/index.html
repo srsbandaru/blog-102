@@ -1,0 +1,60 @@
+{% extends "mfa/base_entrance.html" %}
+{% load allauth %}
+
+{% block title %}
+    Two-Factor Authentication
+{% endblock title %}
+
+{% block content %}
+    <div class="container">
+        <h1>Two-Factor Authentication</h1>
+        {% if "totp" in MFA_SUPPORTED_TYPES %}
+            <div class="container mt-3">
+                <h2>Authenticator App</h2>
+                {% if authenticators.totp %}
+                    <p class="text-success fs-5">Authentication using an authenticator app is active.</p>
+                {% else %}
+                    <p class="text-danger fs-5">An authenticator app is not active.</p>
+                {% endif %}
+                {% url 'mfa_deactivate_totp' as deactivate_url %}
+                {% url 'mfa_activate_totp' as activate_url %}
+                {% if authenticators.totp %}
+                    <a class="btn btn-danger" href="{{deactivate_url}}" role="button">Deactivate</a>
+                {% else %}
+                    <a class="btn btn-success" href="{{activate_url}}" role="button">Activate</a>
+                {% endif %}
+            </div> 
+        {% endif %}
+        {% if "recovery_codes" in MFA_SUPPORTED_TYPES %}
+            {% with total_count=authenticators.recovery_codes.generate_codes|length unused_count=authenticators.recovery_codes.get_unused_codes|length %}
+                <div class="container mt-3">
+                    <h2>Recovery Codes</h2>
+                    {% if authenticators.recovery_codes %}
+                        <p class="text-success fs-5">
+                            {% if unused_count == 1 %}
+                                There is {{ unused_count }} out of {{ total_count }} recovery codes available.
+                            {% else %}
+                                There are {{ unused_count }} out of {{ total_count }} recovery codes available.
+                            {% endif %} 
+                        </p>
+                    {% else %}
+                        <p class="text-danger fs-5">No recovery codes set up.</p>
+                    {% endif %}
+                    {% if is_mfa_enabled %}
+                        {% if authenticators.recovery_codes %}
+                            {% if unused_count > 0 %}
+                                {% url 'mfa_view_recovery_codes' as view_url %}
+                                <a class="btn btn-primary" href="{{view_url}}" role="button">View</a>
+                                {% url 'mfa_download_recovery_codes' as download_url %}
+                                <a class="btn btn-secondary" href="{{download_url}}" role="button">Download</a>
+                            {% endif %}
+                        {% endif %}
+                        {% url 'mfa_generate_recovery_codes' as generate_url %}
+                        <a class="btn btn-secondary" href="{{generate_url}}" role="button">Generate</a>
+                    {% endif %}
+                </div>
+            {% endwith %}
+        {% endif %}
+    </div>
+    
+{% endblock content %}

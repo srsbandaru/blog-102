@@ -1,4 +1,5 @@
 {% extends "base_master.html" %}
+{% load allauth %}
 {% load django_bootstrap5 %}
 {% load thumbnail %}
 {% block title %}
@@ -51,9 +52,11 @@
             </div>
             <div class="d-flex justify-content-center mb-2">
                 <button class="btn btn-outline-secondary"
-                onclick="window.location='{% url 'account_change_password' %}'">Change Your Password</button>
+                    onclick="window.location='{% url 'account_change_password' %}'">Change Password</button>
                 <button class="btn btn-outline-secondary ms-1"
-                onclick="window.location='{% url 'account_email' %}'">Change Email Address</button>
+                    onclick="window.location='{% url 'account_email' %}'">Change Email</button>
+                <button class="btn btn-outline-secondary ms-1"
+                    onclick="window.location='/accounts/2fa'">Manage 2FA</button>
             </div>
         </div>
         <div class="col-lg-8">

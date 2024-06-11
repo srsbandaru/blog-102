@@ -1,0 +1,26 @@
+{% extends "mfa/recovery_codes/base.html" %}
+{% load allauth %}
+{% block content %}
+    <div class="container">
+        <h1>Recovery Codes</h1>
+        <p>
+            {% if unused_codes|length == 1 %}
+                There is {{ unused_codes|length }} out of {{ total_count }} recovery codes available.
+            {% else %}
+                There are {{ unused_codes|length }} out of {{ total_count }} recovery codes available.
+            {% endif %}
+        </p>
+        <div class="mb-3">
+            <label for="{{recovery_codes}}" class="form-label">Unused codes</label>
+            <textarea class="form-control" id="{{recovery_codes}}" rows="{{unused_codes|length}}" disabled readonly>{% for code in unused_codes %}{% if forloop.counter0 %}
+{% endif %}{{ code }}{% endfor %}</textarea>
+        </div>
+        {% if unused_codes %}
+            {% url 'mfa_download_recovery_codes' as download_url %}
+            <a class="btn btn-primary" href="{{download_url}}" role="button">Download codes</a>
+        {% endif %}
+        {% url 'mfa_generate_recovery_codes' as generate_url %}
+        <a class="btn btn-primary" href="{{generate_url}}" role="button">Generate new codes</a>
+    </div>
+    
+{% endblock content %}

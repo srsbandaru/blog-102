@@ -1,0 +1,25 @@
+{% extends "mfa/totp/base.html" %}
+{% load allauth %}
+{% load django_bootstrap5 %}
+{% block title %}
+    Deactivate Authenticator App
+{% endblock title %}
+{% block content %}
+    <div class="container">
+        <h1>Deactivate Authenticator App</h1>
+        <p class="text-primary">You are about to <span class="text-danger">deactivate authenticator app</span> based authentication. <span class="text-danger">Are you sure?</span></p>
+        {% url 'mfa_deactivate_totp' as action_url %}
+        {% element form form=form method="post" action=action_url no_visible_fields=True %}
+            {% slot body %}
+                {% csrf_token %}
+                {% bootstrap_form form %}
+                {% comment %} {% element fields form=form %}
+                    {{ form.as_p }}
+                {% endelement %} {% endcomment %}
+            {% endslot %}
+            {% slot actions %}
+                <button type="submit" class="btn btn-danger">Deactivate</button>
+            {% endslot %}
+        {% endelement %}
+    </div>
+{% endblock content %}

@@ -49,7 +49,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'sorl.thumbnail',
-    'profiles.apps.ProfilesConfig'
+    'profiles.apps.ProfilesConfig',
+    'allauth.mfa',
 ]
 
 MIDDLEWARE = [
@@ -163,7 +164,7 @@ ACCOUNT_PRESERVE_USERNAME_CASING = False
 ACCOUNT_SESSION_REMEMBER = True
 ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = True
 ACCOUNT_USERNAME_MIN_LENGTH = 2
-ACCOUNT_CHANGE_EMAIL = True
+ACCOUNT_CHANGE_EMAIL = False
 
 # Email configurations 
 EMAIL_BACKEND = os.environ.get("EMAIL_BACKEND")

@@ -1,0 +1,30 @@
+{% extends "mfa/recovery_codes/base.html" %}
+{% load allauth %}
+{% block content %}
+    <div class="container">
+        <h1>Recovery Codes</h1>
+        <p class="fs-3">
+            You are about to <span class="text-success">generate a new set of recovery codes</span>  for your account.
+            {% if unused_code_count %}
+                This action will <span class="text-danger">invalidate your existing codes.</span> 
+            {% endif %}
+            <span class="text-danger">Are you sure?</span>
+        </p>
+        {% url 'mfa_generate_recovery_codes' as action_url %}
+        {% element form method="post" action=action_url no_visible_fields=True %}
+            {% slot body %}
+                {% csrf_token %}
+                {{ form.as_p }}
+            {% endslot %}
+            {% slot actions %}
+                {% setvar tags %}
+                    {% if unused_code_count %}
+                        danger
+                    {% else %}
+                    {% endif %}
+                {% endsetvar %}
+                <button type="submit" class="btn btn-primary">Generate</button>
+            {% endslot %}
+        {% endelement %}
+    </div>
+{% endblock content %}
