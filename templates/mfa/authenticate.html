@@ -1,0 +1,24 @@
+{% extends "mfa/base_entrance.html" %}
+{% load allauth %}
+{% load django_bootstrap5 %}
+{% block title %}
+    Sign In
+{% endblock title %}
+{% block content %}
+    <div class="container">
+        <h1>Two-Factor Authentication</h1>
+        <p>Your account is protected by two-factor authentication. Please enter an authenticator code:</p>
+        {% url 'mfa_authenticate' as action_url %}
+        {% element form form=form method="post" action=action_url %}
+            {% slot body %}
+                {% csrf_token %}
+                {% bootstrap_form form %}
+            {% endslot %}
+            {% slot actions %}
+                <button class="btn btn-primary" type="submit">Sign In</button>
+                {% url "account_login" as login_url %}
+                <a class="btn btn-secondary" href="{{login_url}}" role="button">Cancel</a>
+            {% endslot %}
+        {% endelement %}
+    </div>
+{% endblock content %}

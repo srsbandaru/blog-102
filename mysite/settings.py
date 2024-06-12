@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'sorl.thumbnail',
     'profiles.apps.ProfilesConfig',
     'allauth.mfa',
+    'allauth.usersessions',
 ]
 
 MIDDLEWARE = [
@@ -61,7 +62,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "allauth.account.middleware.AccountMiddleware"
+    "allauth.account.middleware.AccountMiddleware",
+    "allauth.usersessions.middleware.UserSessionsMiddleware",
 ]
 
 ROOT_URLCONF = "mysite.urls"

@@ -24,7 +24,18 @@
             <ul class="navbar-nav mb-2 mb-sm-0">
                 {% if request.user.is_authenticated %}
                     <li class="nav-item">
-                        <button type="button" class="btn btn-success m-1" onclick="window.location = '{% url 'profiles:profile_detail' user.profiles.id %}'">Profile</button>
+                        <div class="dropdown">
+                            <button class="btn btn-success dropdown-toggle m-1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Manage Account
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{% url 'profiles:profile_detail' user.profiles.id %}">Profile</a></li>
+                                <li><a class="dropdown-item" href="{% url 'account_change_password' %}">Change Password</a></li>
+                                <li><a class="dropdown-item" href="{% url 'account_email' %}">Change Email Address</a></li>
+                                <li><a class="dropdown-item" href="/accounts/2fa">Two-Factor Authentication</a></li>
+                                <li><a class="dropdown-item" href="/accounts/sessions">Sessions</a></li>
+                            </ul>
+                        </div>
                     </li>
                     <li class="nav-item">
                         <button type="button" class="btn btn-danger m-1" onclick="window.location = '{% url 'account_logout' %}'">Logout</button>
