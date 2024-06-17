@@ -26,12 +26,17 @@
             
             <p>{{post.content}}</p>
             <hr>
-            <p><span class="fw-bold">Author:</span> &lt;Author_Name&gt;</p>
+            <p><span class="fw-bold">Author:</span> {{post.owner}}</p>
             <p><span class="fw-bold">Post created on:</span> {{post.created_at|date}}</p>
             <hr>
             <a href="{% url 'blog:post_list' %}" class="btn btn-outline-primary"><i class="bi bi-back"></i> Back</a>
-            <a href="{% url 'blog:post_update' post.id %}" class="btn btn-outline-secondary"><i class="bi bi-pencil-square"></i> Update</a>
-            <a href="{% url 'blog:post_delete' post.id %}" class="btn btn-outline-danger"><i class="bi bi-trash3"></i> Delete</a>
+            {% if user.is_authenticated %}
+                {% if post.owner == user %}
+                    <a href="{% url 'blog:post_update' post.id %}" class="btn btn-outline-secondary"><i class="bi bi-pencil-square"></i> Update</a>
+                    <a href="{% url 'blog:post_delete' post.id %}" class="btn btn-outline-danger"><i class="bi bi-trash3"></i> Delete</a>
+                {% endif %}
+            {% endif %}
+
         </div>
         
         

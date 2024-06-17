@@ -37,14 +37,19 @@
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item">
                             <a href="{% url 'blog:post_detail' post.id %}" class="btn btn-outline-primary btn-sm"><i class="bi bi-view-list"></i> View Post</a>
-                            <a href="{% url 'blog:post_update' post.id %}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-pencil-square"></i> Edit Post</a>
-                            <a href="{% url 'blog:post_delete' post.id %}" class="btn btn-outline-danger btn-sm"><i class="bi bi-trash3"></i> Delete Post</a>
+                            {% if user.is_authenticated %}
+                                {% if post.owner == user %}
+                                    <a href="{% url 'blog:post_update' post.id %}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-pencil-square"></i> Edit Post</a>
+                                    <a href="{% url 'blog:post_delete' post.id %}" class="btn btn-outline-danger btn-sm"><i class="bi bi-trash3"></i> Delete Post</a>
+                                {% endif %}
+                            {% endif %}
+
                         </li>
                         <li class="list-group-item">
                             <span class="fw-bold">Post Date : </span>{{post.created_at|date}}
                         </li>
                         <li class="list-group-item">
-                            <span class="fw-bold">Author : </span> &lt; Author Name &gt;
+                            <span class="fw-bold">Author : </span>{{post.owner}}
                         </li>
                     </ul>
                     <div class="card-footer">

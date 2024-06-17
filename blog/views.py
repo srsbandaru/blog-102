@@ -3,6 +3,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.urls import reverse_lazy
 from blog.models import Post
 from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from blog.forms import PostForm
 from django.contrib import messages
 
@@ -29,17 +30,32 @@ class PostDetail(DetailView):
         return queryset
     
 # Post Create
-class PostCreate(SuccessMessageMixin, CreateView):
+class PostCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     template_name = "blog/post_form.html"
     success_url = reverse_lazy('blog:post_list')
     model = Post
     context_object_name = "form"
     http_method_names = ["get", "post"]
     fields = ["title", "content", "image"]
-    success_message = "Your post has been created successfully."
+
+    def post(self, request):
+        form = PostForm(request.POST, request.FILES)
+        if not form.is_valid():
+            context = {
+                'form':form
+            }
+            return render(request, self.template_name, context)
+        
+        obj = form.save(commit = False)
+        obj.owner = self.request.user
+        obj.save()
+        
+
+        messages.success(request, "Your post has been created successfully.")
+        return redirect(self.success_url)
 
 # Post Update
-class PostUpdate(SuccessMessageMixin, UpdateView):
+class PostUpdate(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     template_name = "blog/post_form.html"
     # success_url = reverse_lazy('blog:post_list')
     model = Post
@@ -53,16 +69,21 @@ class PostUpdate(SuccessMessageMixin, UpdateView):
     # Update Post with Image
     def post(self, request, *args, **kwargs):
         post = get_object_or_404(self.model, id=self.kwargs['pk'])
-        if request.FILES:
-            post.image.delete()
-        form = PostForm(request.POST, request.FILES, instance=post)
-        if not form.is_valid():
-            context = {
-                'form':form
-            }
-            return render(request, self.template_name, context)
-        form.save()
-        messages.success(request, "Your post has been updated successfully.")
+        if post.owner == self.request.user:
+            if request.FILES:
+                post.image.delete()
+            form = PostForm(request.POST, request.FILES, instance=post)
+            if not form.is_valid():
+                context = {
+                    'form':form
+                }
+                return render(request, self.template_name, context)
+            
+            form.save()
+            messages.success(request, "Your post has been updated successfully.")
+        else:
+            messages.error(request, "You are not an author of the post.")
+        
         return redirect(self.get_success_url())
 
     # Customise the queryset
@@ -83,15 +104,25 @@ class PostUpdate(SuccessMessageMixin, UpdateView):
         return context
 
 # Post Delete
-class PostDelete(SuccessMessageMixin, DeleteView):
+class PostDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     template_name = 'blog/post_confirm_delete.html'
     model = Post 
     context_object_name = "post"
     pk_url_kwarg = 'pk'
     success_url = reverse_lazy("blog:post_list")
     http_method_names = ['get', 'post']
-    success_message = "Your post has been deleted successfully."
+    # success_message = "Your post has been deleted successfully."
 
     def get_queryset(self):
         queryset = self.model.objects.filter(id = self.kwargs["pk"])
         return queryset
+    
+    def post(self, request, *args, **kwargs):
+        post = get_object_or_404(self.model, id=self.kwargs['pk'])
+        if post.owner == self.request.user:
+            post.image.delete()
+            post.delete()
+            messages.success(request, "Your post has been deleted successfully.")
+        else:
+            messages.error(request, "You are not an author of the post.")
+        return redirect(self.success_url)
