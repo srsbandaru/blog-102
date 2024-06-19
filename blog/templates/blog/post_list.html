@@ -49,7 +49,17 @@
                             <span class="fw-bold">Post Date : </span>{{post.created_at|date}}
                         </li>
                         <li class="list-group-item">
-                            <span class="fw-bold">Author : </span>{{post.owner}}
+                            <span class="fw-bold">Author : </span>
+                            <a href="{% url 'profiles:profile_detail' post.owner.profiles.id %}" style="text-decoration: none;">
+                                {% if post.owner.profiles.image %}
+                                    {% thumbnail post.owner.profiles.image "30x30" crop="center" as im %}
+                                        <img class="img-thumbnail rounded-circle" src="{{im.url}}" width="{{im.width}}" height="{{im.height}}" alt="{{post.owner}}">
+                                    {% endthumbnail %}
+                                {% else %}
+                                    <img class="img-thumbnail rounded-circle" src="/media/profiles/no-profile-picture.webp" width="30" height="30" alt="{{post.owner}}">
+                                {% endif %}
+                                {{post.owner.profiles.first_name}} {{post.owner.profiles.last_name}}
+                            </a>
                         </li>
                     </ul>
                     <div class="card-footer">

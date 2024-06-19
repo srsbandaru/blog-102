@@ -3,21 +3,20 @@
 {% load django_bootstrap5 %}
 {% load thumbnail %}
 {% block title %}
-    {{profile.user.username}}'s profile
+    {% if not user.is_authenticated or profile.user != user %}
+        {{profile.first_name}}'s Profile
+    {% else %}
+        Edit User Profile
+    {% endif %}
 {% endblock title %}
 {% block content %}
-
-    {% comment %} <div class="container">
-        <h1>Profile Details</h1>
-        Username : {{profile.user.username}} <br>
-        First Name : {{profile.first_name}} <br>
-        Last Name : {{profile.last_name}} <br>
-        Mobile Number : {{profile.mobile}} <br>
-        Address : {{profile.address}} <br>
-        Profile Picture : {{profile.image}} <br>
-    </div> {% endcomment %}
     <section>
-    <div class="container py-5">
+    <div class="container">
+        {% if not user.is_authenticated or profile.user != user %}
+            <h1>{{profile.first_name}}'s Profile</h1>
+        {% else %}
+            <h1>Edit User Profile</h1>
+        {% endif %}
         <div class="row">
         <div class="col-lg-4">
             <div class="card mb-4">
@@ -31,33 +30,33 @@
                         class="rounded-circle img-fluid" style="width: 245px;">
                     {% endif %}
                     <h5 class="my-3">{{profile.first_name}} {{profile.last_name}}</h5>
-                    <div class="d-flex justify-content-center mb-2">
-                        <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary"
-                            onclick="window.location='{% url 'profiles:picture_update' profile.id %}'">
+                    {% if user.is_authenticated %}
+                        {% if profile.user != user %}
+                            <button class="btn btn-primary">Follow</button>
+                        {% else %}
+                            <div class="d-flex justify-content-center mb-2">
+                                <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary"
+                                    onclick="window.location='{% url 'profiles:picture_update' profile.id %}'">
+                                        {% if profile.image %}
+                                            Change Picture
+                                        {% else %}
+                                            Upload Picture
+                                        {% endif %}
+                                </button>
                                 {% if profile.image %}
-                                    Change Picture
-                                {% else %}
-                                    Upload Picture
+                                    <button type="submit" data-mdb-button-init data-mdb-ripple-init 
+                                        class="btn btn-outline-danger ms-1"
+                                        onclick="window.location='{% url 'profiles:picture_delete' profile.id %}'">
+                                        Remove Picture
+                                    </button>
                                 {% endif %}
-                        </button>
-                        {% if profile.image %}
-                            <button type="submit" data-mdb-button-init data-mdb-ripple-init 
-                                class="btn btn-outline-danger ms-1"
-                                onclick="window.location='{% url 'profiles:picture_delete' profile.id %}'">
-                                Remove Picture
-                            </button>
+                            </div>
                         {% endif %}
-                    </div>
+                    {% endif %}
+                    
                 </div>
             </div>
-            <div class="d-flex justify-content-center mb-2">
-                <button class="btn btn-outline-secondary"
-                    onclick="window.location='{% url 'account_change_password' %}'">Change Password</button>
-                <button class="btn btn-outline-secondary ms-1"
-                    onclick="window.location='{% url 'account_email' %}'">Change Email</button>
-                <button class="btn btn-outline-secondary ms-1"
-                    onclick="window.location='/accounts/2fa'">Manage 2FA</button>
-            </div>
+            
         </div>
         <div class="col-lg-8">
             <div class="card mb-4">
@@ -80,15 +79,17 @@
                         </div>
                     </div>
                     <hr>
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <p class="mb-0">Username</p>
+                    {% if user.is_authenticated and profile.user == user %}
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">Username</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0">{{profile.user.username}}</p>
+                            </div>
                         </div>
-                        <div class="col-sm-9">
-                            <p class="text-muted mb-0">{{profile.user.username}}</p>
-                        </div>
-                    </div>
-                    <hr>
+                        <hr>
+                    {% endif %}
                     <div class="row">
                         <div class="col-sm-3">
                             <p class="mb-0">Email</p>
@@ -114,14 +115,15 @@
                         <div class="col-sm-9">
                             <p class="text-muted mb-0">{{profile.address}}</p>
                         </div>
-                        
                     </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <button class="btn btn-outline-primary" type="submit" onclick="window.location = '{% url 'profiles:profile_update' profile.id %}'">Update</button>
+                    {% if user.is_authenticated and profile.user == user %}
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <button class="btn btn-outline-primary" type="submit" onclick="window.location = '{% url 'profiles:profile_update' profile.id %}'">Update</button>
+                            </div>
                         </div>
-                    </div>
+                    {% endif %}
                 </div>
             </div>
             </div>

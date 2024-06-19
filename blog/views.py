@@ -126,3 +126,13 @@ class PostDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
         else:
             messages.error(request, "You are not an author of the post.")
         return redirect(self.success_url)
+    
+class MyPostList(LoginRequiredMixin, ListView):
+    model = Post
+    http_method_names = ['get']
+    context_object_name = 'post_list'
+    template_name = 'blog/post_list.html'
+
+    def get_queryset(self):
+        queryset = self.model.objects.filter(owner=self.request.user)
+        return queryset

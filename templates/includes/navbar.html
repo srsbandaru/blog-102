@@ -17,6 +17,11 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'blog:post_list' %}">Blog</a>
                 </li>
+                {% if request.user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'blog:my_post_list' %}">My Posts</a>
+                    </li>
+                {% endif %}
                 <li class="nav-item">
                     <a class="nav-link" href="#">Contact</a>
                 </li>
