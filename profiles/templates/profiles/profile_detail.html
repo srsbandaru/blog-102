@@ -30,9 +30,34 @@
                         class="rounded-circle img-fluid" style="width: 245px;">
                     {% endif %}
                     <h5 class="my-3">{{profile.first_name}} {{profile.last_name}}</h5>
+
+                    <div class="d-flex justify-content-center pb-3">
+                        <div class="text-center mr-3 border-end p-2">
+                            <h2>{{total_posts}}</h2>
+                            <span>Posts</span>
+                        </div>
+                        <div class="text-center mr-3 border-start p-2">
+                            <h2>{{total_followers}}</h2>
+                            <span>Followers</span>
+                        </div>
+                    </div>
                     {% if user.is_authenticated %}
                         {% if profile.user != user %}
-                            <button class="btn btn-primary">Follow</button>
+                            <div class="d-flex justify-content-center mb-2">
+                                <button type="button" 
+                                    class="js-follow btn {% if you_follow %}btn-danger{% else %}btn-primary{% endif %}" 
+                                    data-id="{{profile.user.id}}" 
+                                    data-action="{% if you_follow %}un-{% endif %}follow" 
+                                    data-url="{% url 'profiles:follow' profile.user.id %}">
+                                        <span>
+                                            {% if you_follow %}
+                                                Unfollow
+                                            {% else %}
+                                                Follow
+                                            {% endif %}
+                                        </span>
+                                </button>
+                            </div>
                         {% else %}
                             <div class="d-flex justify-content-center mb-2">
                                 <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary"
@@ -52,6 +77,10 @@
                                 {% endif %}
                             </div>
                         {% endif %}
+                    {% else %}
+                        <div class="d-flex justify-content-center mb-2">
+                            <a class="btn btn-outline-dark m-1" href="{% url 'account_login' %}">Login to Follow</a>
+                        </div>
                     {% endif %}
                     
                 </div>

@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'profiles.apps.ProfilesConfig',
     'allauth.mfa',
     'allauth.usersessions',
+    'followers.apps.FollowersConfig',
 ]
 
 MIDDLEWARE = [
