@@ -1,0 +1,34 @@
+{% extends "base_master.html" %}
+{% load sorl_thumbnail %}
+
+{% block title %}
+    Followers
+{% endblock title %}
+
+{% block content %}
+    <div class="container mt-3">
+        <h1>Followers</h1>
+        {% if myFollowers %}
+            {% for x in myFollowers %}
+                <p>
+                    <a href="{% url 'profiles:profile_detail' x.followed_by.profiles.id %}" style="text-decoration: none;color: black;">
+                        {% if x.followed_by.profiles.image %}
+                            {% thumbnail x.followed_by.profiles.image "100x100" crop="center" as im %}
+                                <img class="img-thumbnail rounded-circle" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"
+                                    alt="{{x.followed_by.profiles.first_name}}">
+                            {% endthumbnail %}
+                        {% else %}
+                            <img class="img-thumbnail rounded-circle" src="/media/profiles/no-picture.png" width="100" height="100"
+                                alt="{{x.followed_by.profiles.first_name}}">
+                        {% endif %}
+                        {{x.followed_by.profiles.first_name}} {{x.followed_by.profiles.last_name}}
+                    </a>
+                </p>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-info" role="alert">
+                No followers found !!!
+            </div>
+        {% endif %}
+    </div>
+{% endblock content %}
